@@ -49,3 +49,4 @@ out/
 # Supabase local caches (if any)
 supabase/.temp/
 supabase/.cache/
+.env
