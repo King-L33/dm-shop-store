@@ -127,7 +127,7 @@ export type TypeCollectionModel = {
 
 export type TypeProductVariantModel = {
   _id: string;
-  productId: TypeProductModel;
+  productId: string;
   name: string;
   color: TypeColorModel;
   colorImages: Image[];
