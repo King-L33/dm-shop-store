@@ -8,31 +8,43 @@ export default function ProductDesription({
 }: {
   product: TypeProductModel;
 }) {
-  const [activeOption, setActiveOption] = useState<string>();
+  const [activeOption, setActiveOption] = useState<string>(
+    product.productVariants[0]?._id
+  );
   const [activeOptionVariant, setActiveOptionVariant] =
     useState<TypeProductVariantModel>();
   const [activeSizes, setActiveSizes] = useState<
     TypeProductVariantModel[] | undefined
   >();
-  const [colors, setColors] = useState<TypeProductVariantModel[]>([]);
+
+  // Derive colors using useMemo to prevent infinite re-renders
+  const colors = React.useMemo(() => {
+    const uniqueColors: TypeProductVariantModel[] = [];
+    const seenColorIds = new Set<string>();
+    
+    product.productVariants.forEach((variant: TypeProductVariantModel) => {
+      if (!seenColorIds.has(variant.color._id)) {
+        seenColorIds.add(variant.color._id);
+        uniqueColors.push(variant);
+      }
+    });
+    
+    return uniqueColors;
+  }, [product.productVariants]);
+
   useEffect(() => {
     setActiveOptionVariant(
       product.productVariants.find((p) => p._id === activeOption)
     );
+  }, [activeOption, product.productVariants]);
+
+  useEffect(() => {
     setActiveSizes(
       product.productVariants.filter(
         (p) => activeOptionVariant?.color._id == p.color._id
       )
     );
-  }, [activeOption, activeOptionVariant, product.productVariants]);
-
-  product.productVariants.map((p: TypeProductVariantModel) => {
-    return colors.find(
-      (c: TypeProductVariantModel) => c.color._id === p.color._id
-    )
-      ? ""
-      : setColors([...colors, p]);
-  });
+  }, [activeOptionVariant]);
 
   return (
     <div className={`grid grid-cols-1 lg:grid-cols-2 gap-[56px]`}>
