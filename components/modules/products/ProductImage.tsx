@@ -45,16 +45,15 @@ export default function ProductImage({
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex-1 border border-gray-100">
+      <div className="flex-1 border border-gray-100 relative">
         <Zoom>
           <Image
             priority
             src={activeImage || '/assets/images/placeholder.png'}
-            width={0}
-            height={0}
-            sizes="100vw"
+            fill
             alt="product detail picture"
-            className="object-contain h-[464px] w-full p-8"
+            className="object-contain p-8"
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Zoom>
       </div>
@@ -115,9 +114,8 @@ export default function ProductImage({
                 <Image
                   src={item.url || '/assets/images/placeholder.png'}
                   alt="small image"
-                  sizes="100vw"
-                  width={0}
-                  height={0}
+                  width={96}
+                  height={96}
                   className="h-[96px] w-auto  object-contain p-2 cursor-pointer"
                 />
               </SwiperSlide>
