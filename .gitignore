@@ -1,0 +1,51 @@
+# Dependency directories
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Build outputs and caches
+dist/
+build/
+coverage/
+.tmp/
+.temp/
+.nyc_output/
+.eslintcache
+*.tsbuildinfo
+
+# Next.js (for all apps)
+.next/
+out/
+.vercel/
+
+# Turbo repo cache
+.turbo/
+
+# Editors/IDE
+.vscode/
+.idea/
+
+# Package manager caches
+.yarn/
+.pnpm-store/
+.npm/
+
+# Environment files (keep examples)
+**/.env
+**/.env.*
+!**/.env.example
+
+# Supabase local caches (if any)
+supabase/.temp/
+supabase/.cache/
