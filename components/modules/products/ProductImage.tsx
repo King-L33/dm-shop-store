@@ -22,34 +22,25 @@ export default function ProductImage({
   activeOptionVariant?: TypeProductVariantModel;
   product: TypeProductModel;
 }) {
-  const [activeImages, setActiveImages] = useState<TypeImage[] | undefined>(
-    product.images
-  );
+  // Derive current variant images using useMemo to avoid circular dependencies
+  const currentVariantImages = useMemo(() => {
+    if (activeOptionVariant?.sizeImages && activeOptionVariant.sizeImages.length > 0) {
+      return activeOptionVariant.sizeImages;
+    }
+    if (activeOptionVariant?.colorImages && activeOptionVariant.colorImages.length > 0) {
+      return activeOptionVariant.colorImages;
+    }
+    return product.images;
+  }, [activeOptionVariant, product.images]);
 
-  const [activeImage, setActiveImage] = useState<string>(product.images[0].url);
+  const [activeImage, setActiveImage] = useState<string>(currentVariantImages[0]?.url || product.images[0]?.url);
 
-  const [activeSmallImages, setActiveSmallImages] = useState<TypeImage[]>(
-    product.images
-  );
-
+  // Update active image when variant images change
   useEffect(() => {
-    setActiveImages(
-      activeOptionVariant &&
-        activeOptionVariant.sizeImages &&
-        activeOptionVariant.sizeImages?.length > 0
-        ? activeOptionVariant.sizeImages
-        : activeOptionVariant && activeOptionVariant.colorImages
-    );
-
-    setActiveSmallImages(
-      activeImages && activeImages[0] ? activeImages : product.images
-    );
-    setActiveImage(
-      activeImages && activeImages[0]
-        ? activeImages[0].url
-        : product.images[0].url
-    );
-  }, [activeOptionVariant, activeImages, activeSmallImages, product.images]);
+    if (currentVariantImages[0]?.url) {
+      setActiveImage(currentVariantImages[0].url);
+    }
+  }, [currentVariantImages]);
 
   return (
     <div className="flex flex-col gap-6">
@@ -109,8 +100,8 @@ export default function ProductImage({
           modules={[Autoplay, Navigation, Pagination]}
           className={cn("productSwiper")}
         >
-          {activeSmallImages &&
-            activeSmallImages.map((item, idx) => (
+          {currentVariantImages &&
+            currentVariantImages.map((item, idx) => (
               <SwiperSlide
                 onMouseEnter={() => setActiveImage(item.url)}
                 onClick={() => setActiveImage(item.url)}
