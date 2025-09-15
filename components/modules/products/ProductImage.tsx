@@ -3,7 +3,7 @@ import {
   TypeProductModel,
   TypeProductVariantModel,
 } from "@/types/models";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import Zoom from "react-medium-image-zoom";
 import "react-medium-image-zoom/dist/styles.css";
 import { Swiper, SwiperSlide } from "swiper/react";
