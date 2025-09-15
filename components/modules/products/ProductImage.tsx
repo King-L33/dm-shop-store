@@ -33,13 +33,14 @@ export default function ProductImage({
     return product.images;
   }, [activeOptionVariant, product.images]);
 
-  const [activeImage, setActiveImage] = useState<string>(currentVariantImages[0]?.url || product.images[0]?.url);
+  const [activeImage, setActiveImage] = useState<string>(
+    currentVariantImages[0]?.url || product.images[0]?.url || '/assets/images/placeholder.png'
+  );
 
   // Update active image when variant images change
   useEffect(() => {
-    if (currentVariantImages[0]?.url) {
-      setActiveImage(currentVariantImages[0].url);
-    }
+    const newImageUrl = currentVariantImages[0]?.url || '/assets/images/placeholder.png';
+    setActiveImage(newImageUrl);
   }, [currentVariantImages]);
 
   return (
@@ -48,7 +49,7 @@ export default function ProductImage({
         <Zoom>
           <Image
             priority
-            src={activeImage}
+            src={activeImage || '/assets/images/placeholder.png'}
             width={0}
             height={0}
             sizes="100vw"
@@ -103,16 +104,16 @@ export default function ProductImage({
           {currentVariantImages &&
             currentVariantImages.map((item, idx) => (
               <SwiperSlide
-                onMouseEnter={() => setActiveImage(item.url)}
-                onClick={() => setActiveImage(item.url)}
+                onMouseEnter={() => setActiveImage(item.url || '/assets/images/placeholder.png')}
+                onClick={() => setActiveImage(item.url || '/assets/images/placeholder.png')}
                 key={idx}
                 className={cn(
                   "h-full border border-gray-100 hover:border-primary-500 !flex !items-center !justify-center",
-                  activeImage == item.url && "border-primary-500 border-2"
+                  activeImage === (item.url || '/assets/images/placeholder.png') && "border-primary-500 border-2"
                 )}
               >
                 <Image
-                  src={item.url}
+                  src={item.url || '/assets/images/placeholder.png'}
                   alt="small image"
                   sizes="100vw"
                   width={0}
