@@ -8,7 +8,7 @@ import Collections from "@/components/modules/collections";
 import Newsletters from "@/components/modules/newsletters";
 import { getProducts } from "@/actions/product";
 import { getCampaign, getCampaigns } from "@/actions/campaign";
-import Firework from "@/components/custom/Firework"
+// import Firework from "@/components/custom/Firework"
 
 export const revalidate = 3600;
 
@@ -23,7 +23,7 @@ export default async function Home() {
 
   return (
     <>
-      <Firework/>
+      {/* <Firework/> */}
       <HomeSlide
         firstZone={firstZone}
         secondZone={secondZone}
