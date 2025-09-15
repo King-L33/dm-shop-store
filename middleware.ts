@@ -18,7 +18,11 @@ function getLocale(request: NextRequest): string {
 
   // match the navigator language to locales languages
   const languages = new Negotiator({ headers: negotiatorHeaders }).languages();
-  return match(languages, localesString, defaultLocale);
+  
+  // Filter out invalid language tags like '*'
+  const validLanguages = languages.filter(lang => lang !== '*' && /^[a-zA-Z]{2,3}(-[a-zA-Z0-9]{2,8})*$/.test(lang));
+  
+  return match(validLanguages.length > 0 ? validLanguages : [defaultLocale], localesString, defaultLocale);
 }
 
 /**Supabase middleware */
