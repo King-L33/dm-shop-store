@@ -30,8 +30,51 @@ const isAuthRoute = (pathname: string) =>
   pathname.startsWith('/customer/') || pathname.startsWith('/track-order/');
 
 export default async function middleware(request: NextRequest) {
-  // if (process.env.NODE_ENV === "development") return NextResponse.next();
+  // Skip middleware for development to avoid Supabase connection issues
+  if (process.env.NODE_ENV === "development") {
+    // Still handle locale routing in development
+    let response, nextLocale;
+    const { basePath, pathname } = request.nextUrl;
 
+    // Redirect if there is no locale
+    const pathLocale = locales.find(
+      (locale) =>
+        pathname.startsWith(`/${locale.lang}/`) || pathname === `/${locale.lang}`
+    );
+
+    // a local is found
+    if (pathLocale) {
+      const isDefaultLocale = pathLocale.lang === defaultLocale;
+      if (isDefaultLocale) {
+        let pathWithoutLocale =
+          pathname.slice(`/${pathLocale.lang}`.length) || "/";
+        if (request.nextUrl.search) pathWithoutLocale += request.nextUrl.search;
+        const url = basePath + pathWithoutLocale;
+        response = NextResponse.redirect(new URL(url, request.url));
+      }
+      nextLocale = pathLocale.lang;
+    }
+
+    // a local is not found cause either is hidden for default or user is new to website
+    else {
+      const hasLocale = request.cookies.has("NEXT_LOCALE");
+      const locale = hasLocale ? defaultLocale : getLocale(request);
+      let newPath = `/${locale}${pathname}`;
+      if (request.nextUrl.search) newPath += request.nextUrl.search;
+      const url = basePath + newPath;
+      response =
+        locale === defaultLocale
+          ? NextResponse.rewrite(new URL(url, request.url))
+          : NextResponse.redirect(new URL(url, request.url));
+      nextLocale = locale;
+    }
+
+    if (!response) response = NextResponse.next();
+    if (nextLocale) response.cookies.set("NEXT_LOCALE", nextLocale);
+    return response;
+  }
+
+  // Production middleware with Supabase
   const res = NextResponse.next()
   const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
   const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!

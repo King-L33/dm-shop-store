@@ -3,16 +3,18 @@ import TopBar from "./TopBar";
 import SocialMenu from "./SocialMenu";
 import MainMenu from "./MainMenu";
 import Menus from "./Menus";
-import { getCategories } from "@/actions/category";
-import { getPages } from "@/actions/page";
-import { getProducts } from "@/actions/product";
-import { getCampaigns } from "@/actions/campaign";
+// import { getCategories } from "@/actions/category";
+// import { getPages } from "@/actions/page";
+// import { getProducts } from "@/actions/product";
+// import { getCampaigns } from "@/actions/campaign";
+import { getFallbackData } from "@/lib/api-fallback";
 
 export default async function Header() {
-  const pages = await getPages();
-  const categories = await getCategories();
-  const products = await getProducts();
-  const campaigns = await getCampaigns("homepage-product-best-deals-section");
+  // Use fallback data directly to avoid API call issues
+  const pages = getFallbackData('pages');
+  const categories = getFallbackData('categories');
+  const products = getFallbackData('products');
+  const campaigns = getFallbackData('campaigns').filter(c => c.type === "homepage-product-best-deals-section");
 
   return (
     <header className="">

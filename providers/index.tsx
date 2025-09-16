@@ -1,10 +1,6 @@
 import React from "react";
-import { Analytics } from "@vercel/analytics/react";
-import FramerMotionProvider from "./framer-motion-provider";
-import ClerkProvider from "./clerk-provider";
-import ToasterProvider from "./ToastProvider";
-import I18nProvider from "./i18n-provider";
 import StateProvider from "./state-provider";
+import I18nProvider from "./i18n-provider";
 
 export default function Providers({
   children,
@@ -15,22 +11,9 @@ export default function Providers({
 }) {
   return (
     <StateProvider>
-      <ClerkProvider>
-        <FramerMotionProvider>
-          {/* <ThemeProvider
-            attribute="class"
-            defaultTheme="light"
-            enableSystem
-            disableTransitionOnChange
-            > */}
-            <I18nProvider locale={locale}>
-              {children}
-            <Analytics />
-            </I18nProvider>
-        </FramerMotionProvider>
-        <ToasterProvider />
-        {/* </ThemeProvider> */}
-        </ClerkProvider>
+      <I18nProvider locale={locale}>
+        {children}
+      </I18nProvider>
     </StateProvider>
   );
 }
